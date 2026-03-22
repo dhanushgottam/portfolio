@@ -5,7 +5,9 @@ const navLinks = document.querySelectorAll('.nav-links a');
 const hamburger = document.querySelector('.hamburger');
 const navList = document.querySelector('.nav-links');
 const sections = document.querySelectorAll('section');
-const fadeElements = document.querySelectorAll('.fade-in, .skill-card, .project-card');
+
+const fadeElements = document.querySelectorAll('.fade-in, .skill-node, .skill-subnode, .project-card, .certificate-card');
+
 
 // Navbar functionality
 function toggleMobileMenu() {
@@ -58,8 +60,57 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
+
 // Observe elements for animation
 fadeElements.forEach(el => observer.observe(el));
+
+// Project GitHub hover functionality
+document.querySelectorAll('.project-card[data-repo]').forEach(card => {
+  const repoUrl = card.dataset.repo;
+  const hoverIcon = card.querySelector('.github-hover-icon');
+  
+  if (hoverIcon) {
+    hoverIcon.href = repoUrl;
+  }
+});
+
+
+// Certificate Modal Functionality
+const certificateCards = document.querySelectorAll('.certificate-card');
+const modal = document.getElementById('certificate-modal');
+const certImage = document.getElementById('cert-image');
+const closeModal = document.querySelector('.close-modal');
+
+certificateCards.forEach(card => {
+  const viewBtn = card.querySelector('.view-cert-btn');
+  const certSrc = card.dataset.cert;
+  
+  viewBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    certImage.src = certSrc;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+closeModal.addEventListener('click', () => {
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.classList.contains('active')) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
 
 // Navbar scroll effect
 window.addEventListener('scroll', () => {
