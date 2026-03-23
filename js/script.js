@@ -282,6 +282,33 @@ function initParticles() {
   observer.observe(body, { attributes: true, attributeFilter: ['class'] });
 }
 
+// Resume download handler - force automatic download  
+document.querySelectorAll('.resume-btn[aria-label="Download Resume"]').forEach(btn => {
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const response = await fetch('gottamDhanushresumeds.pdf');
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Gottam-Dhanush-Resume.pdf';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      const link = document.createElement('a');
+      link.href = 'gottamDhanushresumeds.pdf';
+      link.download = 'Gottam-Dhanush-Resume.pdf';
+      link.click();
+    }
+  });
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
